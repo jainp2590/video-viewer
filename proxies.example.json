@@ -1,0 +1,10 @@
+[
+  {
+    "label": "egress-a",
+    "proxy_url": "http://user:pass@proxy.example.com:8080"
+  },
+  {
+    "label": "egress-b",
+    "proxy_url": "http://proxy.example.com:3128"
+  }
+]
