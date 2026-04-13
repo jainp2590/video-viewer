@@ -1,6 +1,8 @@
 import { fetch, ProxyAgent } from "undici";
 import type { WatcherResult } from "./types.js";
 
+const DIRECT_TOKEN = "direct";
+
 export async function watchVideoThroughProxy(params: {
   video_url: string;
   proxy_url: string;
@@ -11,16 +13,23 @@ export async function watchVideoThroughProxy(params: {
   let status_code: number | null = null;
   let content_type: string | null = null;
   try {
-    const dispatcher = new ProxyAgent(params.proxy_url);
-    const response = await fetch(params.video_url, {
-      method: "GET",
-      dispatcher,
-      redirect: "follow",
-      headers: {
-        "User-Agent": "video-viewer-simulator/0.1 (+local lab)",
-        Range: `bytes=0-${params.max_bytes - 1}`,
-      },
-    });
+    const use_direct = params.proxy_url.trim().toLowerCase() === DIRECT_TOKEN;
+    const headers = {
+      "User-Agent": "video-viewer-simulator/0.1 (+local lab)",
+      Range: `bytes=0-${params.max_bytes - 1}`,
+    };
+    const response = use_direct
+      ? await fetch(params.video_url, {
+          method: "GET",
+          redirect: "follow",
+          headers,
+        })
+      : await fetch(params.video_url, {
+          method: "GET",
+          redirect: "follow",
+          headers,
+          dispatcher: new ProxyAgent(params.proxy_url),
+        });
     status_code = response.status;
     content_type = response.headers.get("content-type");
     const reader = response.body?.getReader();
@@ -32,6 +41,7 @@ export async function watchVideoThroughProxy(params: {
         duration_ms: Math.round(performance.now() - started),
         error_message: "Response had no body.",
         content_type,
+        transport: "http",
       };
     }
     let bytes_read = 0;
@@ -54,6 +64,7 @@ export async function watchVideoThroughProxy(params: {
       duration_ms,
       error_message: null,
       content_type,
+      transport: "http",
     };
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
@@ -64,6 +75,7 @@ export async function watchVideoThroughProxy(params: {
       duration_ms: Math.round(performance.now() - started),
       error_message: message,
       content_type,
+      transport: "http",
     };
   }
 }

@@ -12,6 +12,7 @@
     "simulate": "npm run build && node dist/index.js"
   },
   "dependencies": {
+    "playwright": "^1.51.1",
     "undici": "^7.5.0",
     "zod": "^3.24.2"
   },

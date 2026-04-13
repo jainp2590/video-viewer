@@ -5,6 +5,7 @@ export type WatcherResult = {
   duration_ms: number;
   error_message: string | null;
   content_type: string | null;
+  transport: "browser" | "http";
 };
 
 export type EngagementSummary = {

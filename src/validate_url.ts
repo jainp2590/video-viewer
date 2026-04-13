@@ -1,6 +1,6 @@
 const RESTRICTED_HOST_SUFFIXES = [
-  "youtube.com",
-  "youtu.be",
+  // "youtube.com",
+  // "youtu.be",
   "tiktok.com",
   "instagram.com",
   "facebook.com",
