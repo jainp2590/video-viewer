@@ -98,4 +98,4 @@ This does **not** guarantee that any third party counts sessions as legitimate h
 
 ## License
 
-Private project (`"private": true` in `package.json`). Add a license file if you open-source the repo
+Private project (`"private": true` in `package.json`). Add a license file if you open-source the repo.
